@@ -1,5 +1,6 @@
 #define BRIGHTNESS_FILE "/sys/class/backlight/intel_backlight/brightness"
 #define KBD_BRIGHTNESS_FILE "/sys/class/leds/chromeos::kbd_backlight/brightness"
+#define AC_PRESENT_FILE "/sys/class/power_supply/AC/online"
 
 #define IDLE_BRIGHTNESS 100 // max for me is 937 so this is roughly 10%
 

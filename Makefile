@@ -2,8 +2,11 @@ CFLAGS = -O3 -std=c99 -Wall -Werror
 LIBS = -lX11 -lXss
 EXE = idled
 
-SRC_FILES = idled.c \
-            brightness.c
+SRC_FILES = \
+	idled.c \
+	brightness.c \
+	ac.c \
+	inhibitors.c
 
 OBJS = $(SRC_FILES:.c=.o)
 

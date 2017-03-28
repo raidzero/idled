@@ -6,6 +6,7 @@
 
 #include "config.h"
 #include "idled.h"
+#include "inhibitors.h"
 
 int main(void) {
   Display *dpy = XOpenDisplay(NULL);
@@ -53,28 +54,32 @@ int main(void) {
       actionTaken2 = 0;
       actionTaken3 = 0;
     } else {
-      switch (event) {
-        case IDLE_1:
-          if (!actionTaken1) {
-            printf("Dimming as user %d/%d\n", getuid(), getgid());
-            setBrightness(LCD, IDLE_BRIGHTNESS);
-            setBrightness(KBD, 0);
-            actionTaken1 = 1;
-          }
-          break;
-        case IDLE_2:
-          if (!actionTaken2) {
-            system(ACTION_2);
-            actionTaken2 = 1;// runs a system command as a given user, used for lock screen
-void runAs(int, int, char*);
-          }
-          break;
-        case IDLE_3:
-          if (!actionTaken3) {
-            system(ACTION_3);
-            actionTaken3 = 1;
-          }
-          break;
+      int inhibit = shouldInhibitAction(event);
+    
+      // only do stuff if the action is not inhibited
+      if (!inhibit) {
+        switch (event) {
+          case IDLE_1:
+            if (!actionTaken1) {
+              printf("Dimming as user %d/%d\n", getuid(), getgid());
+              setBrightness(LCD, IDLE_BRIGHTNESS);
+              setBrightness(KBD, 0);
+              actionTaken1 = 1;
+            }
+            break;
+          case IDLE_2:
+            if (!actionTaken2) {
+              system(ACTION_2);
+              actionTaken2 = 1;
+            }
+            break;
+          case IDLE_3:
+            if (!actionTaken3) {
+              system(ACTION_3);
+              actionTaken3 = 1;
+            }
+            break;
+        }
       }
     }
 
