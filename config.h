@@ -10,9 +10,9 @@
 #define TIMEOUT_3   600 * 1000 // hybrid-sleep after 10 min
 #define ACTIVE 1
 
-#define IDLE_1 1000 // dim screen/turn off keyboad backlight
-#define IDLE_2 2000 // lock screen, trigger ACTION_2
-#define IDLE_3 3000 // hybrid-sleep, trigger ACTION_3
+#define IDLE_1 10 // dim screen/turn off keyboad backlight
+#define IDLE_2 20 // lock screen, trigger ACTION_2
+#define IDLE_3 30 // hybrid-sleep, trigger ACTION_3
 
 #define ACTION_2 "/home/raidzero/.config/i3/lockscreen"
 

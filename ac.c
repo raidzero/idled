@@ -1,9 +1,10 @@
 #include <stdio.h>
 
 #include "ac.h"
+#include "idled.h"
 #include "config.h"
 
-int isAcOnline() {
+byte isAcOnline() {
   printf("isAcOnline() called.\n");
   FILE* fp = fopen(AC_PRESENT_FILE, "r");
 
@@ -16,6 +17,6 @@ int isAcOnline() {
     return value;
   } else {
     printf("Could not open file.\n");
-    return -1;
+    return 0;
   }
 }

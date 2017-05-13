@@ -3,15 +3,15 @@
 #include "ac.h"
 #include "config.h"
 #include "inhibitors.h"
+#include "idled.h"
 
-
-// arrays of inhibitor functions to call
+// arrays of inhibitor functions to call, as long as there are under 255 functions per action ;)
 funcPtr idle_1_inhibitors[] = { isAcOnline };
 funcPtr idle_2_inhibitors[] = { }; // nothing inhibits locking the screen
 funcPtr idle_3_inhibitors[] = { isAcOnline };
 
-int shouldInhibitAction(int idleAction) {
-  int numFuncs = 0;
+byte shouldInhibitAction(byte idleAction) {
+  byte numFuncs = 0;
   
   // declare a pointer to the array of inhibitor functions
   funcPtr *inhibitors;
@@ -41,9 +41,9 @@ int shouldInhibitAction(int idleAction) {
   return runInhibitors(inhibitors, numFuncs);
 }
 
-int runInhibitors(funcPtr *inhibitors, int len) {
-  for (int i=0; i<len; i++) {
-    int result = (*inhibitors[i])();
+byte runInhibitors(funcPtr *inhibitors, byte len) {
+  for (byte i=0; i<len; i++) {
+    byte result = (*inhibitors[i])();
     if (result == 1) {
       return 1;
     }

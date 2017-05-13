@@ -8,28 +8,31 @@
 #include "idled.h"
 #include "inhibitors.h"
 
+byte ACTION_TAKEN_1 = 0x1;
+byte ACTION_TAKEN_2 = 0x2;
+byte ACTION_TAKEN_3 = 0x4;
+
 int main(void) {
   Display *dpy = XOpenDisplay(NULL);
-  
+
   if (!dpy) {
     printf("Could not open display.\n");
     return(-1);
   }
 
   printf("Starting idled as user: %d/%d\n", getuid(), getgid());
-  
+
   // brightness values before we messed with them
   int preSetBrightness = readBrightness(LCD);
   int preSetKbdBrightness = readBrightness(KBD);
 
   XScreenSaverInfo *info = XScreenSaverAllocInfo();
-  
-  int listening = 1;
-  int event = listen(dpy, info);
-  
-  int actionTaken1 = 0;
-  int actionTaken2 = 0;
-  int actionTaken3 = 0;
+
+  byte listening = 1;
+  byte event = listen(dpy, info);
+
+  // ibitwise operations will be done on this track of the different actions taken
+  byte ACTIONS_TAKEN = 0;
 
   while (listening) {
     printf("%d\n", event);
@@ -50,33 +53,31 @@ int main(void) {
       setBrightness(KBD, preSetKbdBrightness);
 
       printf("Resetting action flags.\n");
-      actionTaken1 = 0;
-      actionTaken2 = 0;
-      actionTaken3 = 0;
+      ACTIONS_TAKEN = 0;
     } else {
       int inhibit = shouldInhibitAction(event);
-    
+
       // only do stuff if the action is not inhibited
       if (!inhibit) {
         switch (event) {
           case IDLE_1:
-            if (!actionTaken1) {
+            if ((ACTIONS_TAKEN & ACTION_TAKEN_1) == 0) {
               printf("Dimming as user %d/%d\n", getuid(), getgid());
               setBrightness(LCD, IDLE_BRIGHTNESS);
               setBrightness(KBD, 0);
-              actionTaken1 = 1;
+              ACTIONS_TAKEN |= ACTION_TAKEN_1;
             }
             break;
           case IDLE_2:
-            if (!actionTaken2) {
+            if ((ACTIONS_TAKEN & ACTION_TAKEN_2) == 0) {
               system(ACTION_2);
-              actionTaken2 = 1;
+              ACTIONS_TAKEN |= ACTION_TAKEN_2;
             }
             break;
           case IDLE_3:
-            if (!actionTaken3) {
+            if ((ACTIONS_TAKEN & ACTION_TAKEN_3) == 0) {
               system(ACTION_3);
-              actionTaken3 = 1;
+              ACTIONS_TAKEN |= ACTION_TAKEN_3;
             }
             break;
         }
@@ -90,13 +91,15 @@ int main(void) {
 }
 
 
-int listen(Display* dpy, XScreenSaverInfo* info) {
+byte listen(Display* dpy, XScreenSaverInfo* info) {
   unsigned long int idleTime = 0;
-  int running = 1;
+  byte running = 1;
   do {
     sleep(1);
     XScreenSaverQueryInfo(dpy, DefaultRootWindow(dpy), info);
     idleTime = info->idle;
+
+    printf("Idle time: %ld\n", idleTime);
 
     if (idleTime > TIMEOUT_1) {
       if (idleTime < TIMEOUT_2) {

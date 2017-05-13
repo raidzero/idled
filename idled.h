@@ -1,5 +1,8 @@
 #include <X11/extensions/scrnsaver.h>
 
+// shortcut to a type for byte
+typedef unsigned char byte;
+
 // used for the set/read brightness functions to know which file to work with
 typedef enum { LCD, KBD } BRIGHTNESS_TYPE;
 
@@ -10,4 +13,5 @@ int readBrightness(BRIGHTNESS_TYPE);
 int setBrightness(BRIGHTNESS_TYPE, int);
 
 // listens for inacitivty and returns a status, active or any of 3 idle levels
-int listen(Display*, XScreenSaverInfo*);
+byte listen(Display*, XScreenSaverInfo*);
+
