@@ -6,6 +6,7 @@ SRC_FILES = \
 	idled.c \
 	brightness.c \
 	ac.c \
+	music.c \
 	inhibitors.c
 
 OBJS = $(SRC_FILES:.c=.o)

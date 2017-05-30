@@ -17,4 +17,4 @@
 #define ACTION_2 "/home/raidzero/.config/i3/lockscreen"
 
 // requires sudo execution w/o passwd in sudoers
-#define ACTION_3 "sudo systemctl hybrid-sleep" 
+#define ACTION_3 "sudo systemctl suspend"
