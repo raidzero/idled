@@ -1,15 +1,15 @@
 #include <stdio.h>
 
 #include "ac.h"
-#include "music.h"
+#include "pulseaudio.h"
 #include "config.h"
 #include "inhibitors.h"
 #include "idled.h"
 
 // arrays of inhibitor functions to call, as long as there are under 255 functions per action ;)
 funcPtr idle_1_inhibitors[] = { isAcOnline };
-funcPtr idle_2_inhibitors[] = { }; // nothing inhibits locking the screen
-funcPtr idle_3_inhibitors[] = { isAcOnline, isMusicPlaying };
+funcPtr idle_2_inhibitors[] = { isPulsePlaying };
+funcPtr idle_3_inhibitors[] = { isAcOnline, isPulsePlaying };
 
 byte shouldInhibitAction(byte idleAction) {
   byte numFuncs = 0;

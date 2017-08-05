@@ -7,6 +7,7 @@ SRC_FILES = \
 	brightness.c \
 	ac.c \
 	music.c \
+	pulseaudio.c \
 	inhibitors.c
 
 OBJS = $(SRC_FILES:.c=.o)
